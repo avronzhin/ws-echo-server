@@ -69,7 +69,7 @@ function onServerMessage(message) {
 }
 
 function onConnectionOpen() {
-    console.log("Установка успешно выполнена. Можете отправлять сообщения. Для отключения введите !q")
+    console.log("Установка успешно выполнена. Можете отправлять сообщения. Для отсоединения введите !q")
     connected = true;
     connecting = false;
 }
