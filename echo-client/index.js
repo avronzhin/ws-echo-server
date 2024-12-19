@@ -1,5 +1,5 @@
-import WebSocket from "ws";
-import readline from "readline";
+const WebSocket = require("ws");
+const readline = require("readline");
 
 const serverUrl = "ws:/localhost:8080/ws/api/v1";
 var client = null;
@@ -36,7 +36,8 @@ function onConsoleLine(line) {
     consoleInterface.prompt();
 }
 
-function handleLineInMenu(command) {
+function handleLineInMenu(line) {
+    const command = line;
     switch (command) {
         case "help":
             printHelp();
@@ -47,13 +48,16 @@ function handleLineInMenu(command) {
         case "exit":
             consoleInterface.close()
             break;
+        default:
+            console.log("Неизвестная команда")
+            break;
     }
 }
 
 function printHelp() {
     console.log("connect - для подключения к серверу")
     console.log("exit - для закрытия приложения")
-    console.log("help - для вывода возможных комманд")
+    console.log("help - для вывода возможных команд")
 }
 
 function connect() {
@@ -61,17 +65,18 @@ function connect() {
     client = new WebSocket(serverUrl);
     client.on("open", onConnectionOpen);
     client.on("message", onServerMessage);
+    client.on("error", console.error);
     connecting = true;
-}
-
-function onServerMessage(message) {
-    console.log("Пришло сообщение от сервера: " + message)
 }
 
 function onConnectionOpen() {
     console.log("Установка успешно выполнена. Можете отправлять сообщения. Для отсоединения введите !q")
     connected = true;
     connecting = false;
+}
+
+function onServerMessage(message) {
+    console.log("Пришло сообщение от сервера: " + message)
 }
 
 function handleLineInSession(line) {
@@ -102,5 +107,5 @@ function onConsoleClose() {
 }
 
 function printMenuText() {
-    console.log("Вы в меню, для вывода списка возможных комманд введите help")
+    console.log("Вы в меню, для вывода списка возможных команд введите help")
 }

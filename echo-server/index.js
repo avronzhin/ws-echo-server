@@ -1,4 +1,4 @@
-import { WebSocketServer } from "ws";
+const { WebSocketServer } = require("ws");
 
 const port = 8080;
 const path = "/ws/api/v1";
@@ -11,16 +11,21 @@ function startServer() {
     console.log("Сервер запущен на порту " + port + ". Подключение для клиентов доступно по пути " + path);
 }
 
-function onClientConnection(ws) {
+function onClientConnection(webSocket) {
     console.log("Новый клиент подключился!");
-    ws.on("message", (message) => onClientMessage(ws, message));
-    ws.on("close", onClientClose);
+    webSocket.on("message", (message) => onClientMessage(webSocket, message));
+    webSocket.on("close", onClientClose);
+    webSocket.on("error", console.error);
 }
 
-function onClientMessage(ws, message) {
+function onClientMessage(webSocket, message) {
     console.log("Получено сообщение от клиента: " + message);
+    sendMessage(webSocket, message);
+}
+
+function sendMessage(webSocket, message) {
     console.log("Отправка эхо-ответа");
-    ws.send(message);
+    webSocket.send(message);
 }
 
 function onClientClose() {
